@@ -1,4 +1,4 @@
-#include <myproject/sample_library.hpp>
+#include <Learning_Options/sample_library.hpp>
 
 int factorial(int input) noexcept
 {
