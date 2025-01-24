@@ -21,7 +21,7 @@ class NumericalOperations{
         static double erf(double x) {
             return std::erf(x);
         }
-        double NormalDistributionCDF(double x){
+        static double NormalDistributionCDF(double x){
             return 0.5 * (1 + erf(x));
         }
 };
