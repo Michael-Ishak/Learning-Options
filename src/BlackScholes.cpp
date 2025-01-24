@@ -18,9 +18,8 @@ class NumericalOperations{
             }
             return integral;
         }
-        static double erf(double x){
-            double f_x = (2/sqrt(std::numbers::pi)) * integrate(0, x);
-            return f_x;
+        static double erf(double x) {
+            return std::erf(x);
         }
         double NormalDistributionCDF(double x){
             double f_x = 0.5 * (1 + erf(x));
