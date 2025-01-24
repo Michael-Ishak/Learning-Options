@@ -22,8 +22,7 @@ class NumericalOperations{
             return std::erf(x);
         }
         double NormalDistributionCDF(double x){
-            double f_x = 0.5 * (1 + erf(x));
-            return f_x;
+            return f_x = 0.5 * (1 + erf(x));
         }
 };
 
