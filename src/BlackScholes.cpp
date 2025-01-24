@@ -31,6 +31,23 @@ class Option: protected NumericalOperations{
         }
 };
 
+
+
+class Greeks{
+    protected:
+        double delta;       // Velocity
+        double gamma;       // Acceleration
+        double theta;       // Time decay
+        double vega;        // Volatility
+        double rho;         // Sensitivity to risk free rate
+    
+    public:
+        Greeks(double delta, double gamma, double theta, double vega, double rho) : delta(delta), gamma(gamma), theta(theta), vega(vega), rho(rho) {}
+
+};
+
+
+
 class Call : public Option {
 public:
     Call(double s_0, double K, double r, double sigma, double T)
