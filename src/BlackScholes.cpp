@@ -28,7 +28,7 @@ class Option: protected NumericalOperations{
         [[nodiscard]] virtual double vega() const = 0;
         [[nodiscard]] virtual double rho() const = 0;
 
-        virtual ~Option() {};
+        virtual ~Option() = default;
 
     protected:
         [[nodiscard]] double d_one() const {
