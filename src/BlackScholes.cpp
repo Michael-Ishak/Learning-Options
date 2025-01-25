@@ -5,11 +5,11 @@ class NumericalOperations{
     protected:
         static inline double exp_minus_t_squared(double t) {
             return std::exp(-t * t);
-    }
-        static double NormalDistributionCDF(double x){
+        }
+        static inline double NormalDistributionCDF(double x){
             return 0.5 * (1 + std::erf(x));
         }
-        static double NormalDistribtuionPDF(double x){
+        static inline double NormalDistribtuionPDF(double x){
             return (1/(std::sqrt(std::numbers::pi))) * std::exp(-(std::pow(x, 2))/2);
         }
 };
