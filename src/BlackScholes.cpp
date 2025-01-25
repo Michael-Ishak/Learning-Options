@@ -80,9 +80,7 @@ public:
     [[nodiscard]] double put() const { return price(); }
 
     [[nodiscard]] double price() const override{
-        double d1 = d_one();
-        double d2 = d_two();
-        return K * std::exp(-r * T) * NormalDistributionCDF(-d2) - s_0 * NormalDistributionCDF(-d1);
+        return K * std::exp(-r * T) * NormalDistributionCDF(-d_two()) - s_0 * NormalDistributionCDF(-d_one());
     }
 };
 
