@@ -1,4 +1,3 @@
-#include <iostream>
 #include <cmath>
 #include <numbers>
 
@@ -10,6 +9,9 @@ class NumericalOperations{
         static double NormalDistributionCDF(double x){
             return 0.5 * (1 + std::erf(x));
         }
+        static double NormalDistribtuionPDF(double x){
+            return (1/(std::sqrt(std::numbers::pi))) * std::exp(-(std::pow(x, 2))/2);
+        }
 };
 
 class Option: protected NumericalOperations{
@@ -19,9 +21,15 @@ class Option: protected NumericalOperations{
     public:
         Option(double s_0, double K, double r, double sigma, double T) : s_0(s_0), K(K), r(r), sigma(sigma), T(T) {}
 
+        [[nodiscard]] virtual double price() const = 0;
+        [[nodiscard]] virtual double delta() const = 0;
+        [[nodiscard]] virtual double gamma() const = 0;
+        [[nodiscard]] virtual double theta() const = 0;
+        [[nodiscard]] virtual double vega() const = 0;
+        [[nodiscard]] virtual double rho() const = 0;
+
         virtual ~Option() {};
 
-        virtual double price() const = 0;
     protected:
         [[nodiscard]] double d_one() const {
             return (std::log(s_0/K) + T * (r + std::pow(sigma, 2))/2)/(sigma * std::sqrt(T));
@@ -32,22 +40,6 @@ class Option: protected NumericalOperations{
 };
 
 
-
-class Greeks{
-    protected:
-        double delta;       // Velocity
-        double gamma;       // Acceleration
-        double theta;       // Time decay
-        double vega;        // Volatility
-        double rho;         // Sensitivity to risk free rate
-    
-    public:
-        Greeks(double delta, double gamma, double theta, double vega, double rho) : delta(delta), gamma(gamma), theta(theta), vega(vega), rho(rho) {}
-
-};
-
-
-
 class Call : public Option {
 public:
     Call(double s_0, double K, double r, double sigma, double T)
@@ -56,9 +48,27 @@ public:
     [[nodiscard]] double call() const { return price(); }
 
     [[nodiscard]] double price() const override{
-        double d1 = d_one();
-        double d2 = d_two();
-        return s_0 * NormalDistributionCDF(d1) - K * std::exp(-r * T) * NormalDistributionCDF(d2);
+        return s_0 * NormalDistributionCDF(d_one()) - K * std::exp(-r * T) * NormalDistributionCDF(d_two());
+    }
+
+    [[nodiscard]] double delta() const override {
+        return NormalDistributionCDF(d_one());
+    }
+
+    [[nodiscard]] double gamma() const override{
+        return NormalDistribtuionPDF(d_one())/(s_0 * sigma * std::sqrt(T));
+    }
+
+    [[nodiscard]] double theta() const override{
+        return -1 * (s_0 * NormalDistribtuionPDF(d_one()) * sigma) / (2* std::sqrt(T) - r * K * std::exp(-r * T) * NormalDistributionCDF(d_two()));
+    }
+
+    [[nodiscard]] double vega() const override{
+        return s_0 * NormalDistribtuionPDF(d_one()) * std::sqrt(T);
+    }
+
+    [[nodiscard]] double rho() const override{
+        return K * T * exp(-r * T) * NormalDistributionCDF(d_two());
     }
 };
 
