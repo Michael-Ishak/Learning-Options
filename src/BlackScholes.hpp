@@ -10,7 +10,7 @@ class NumericalOperations{
             return 0.5 * (1 + std::erf(x));
         }
         static inline double NormalDistributionPDF(double x){
-            return (1/(std::sqrt(std::numbers::pi))) * std::exp(-(std::pow(x, 2))/2);
+            return (1/(std::sqrt(2 * std::numbers::pi))) * std::exp(-0.5 * std::pow(x, 2));
         }
 };
 
@@ -60,7 +60,7 @@ public:
     }
 
     [[nodiscard]] double theta() const override{
-        return -1 * (s_0 * NormalDistributionPDF(d_one()) * sigma) / (2* std::sqrt(T) - r * K * std::exp(-r * T) * NormalDistributionCDF(d_two()));
+        return -1 * (s_0 * NormalDistributionPDF(d_one()) * sigma) / (2* std::sqrt(T)) - r * K * std::exp(-r * T) * NormalDistributionCDF(d_two());
     }
 
     [[nodiscard]] double vega() const override{
@@ -68,7 +68,7 @@ public:
     }
 
     [[nodiscard]] double rho() const override{
-        return K * T * exp(-r * T) * NormalDistributionCDF(d_two());
+        return K * T * std::exp(-r * T) * NormalDistributionCDF(d_two()) / 100.0;
     }
 };
 
@@ -83,7 +83,7 @@ public:
         return K * std::exp(-r * T) * NormalDistributionCDF(-d_two()) - s_0 * NormalDistributionCDF(-d_one());
     }
     [[nodiscard]] double delta() const override {
-        return NormalDistributionCDF(d_one() - 1);
+        return NormalDistributionCDF(d_one()) - 1;
     }
 
     [[nodiscard]] double gamma() const override{
@@ -91,7 +91,7 @@ public:
     }
 
     [[nodiscard]] double theta() const override{
-        return -1 * (s_0 * NormalDistributionPDF(d_one()) * sigma) / (2* std::sqrt(T) + r * K * std::exp(-r * T) * NormalDistributionCDF(-1 * d_two()));
+        return -1 * (s_0 * NormalDistributionPDF(d_one()) * sigma) / (2* std::sqrt(T)) + r * K * std::exp(-r * T) * NormalDistributionCDF(-1 * d_two());
     }
 
     [[nodiscard]] double vega() const override{
@@ -99,16 +99,6 @@ public:
     }
 
     [[nodiscard]] double rho() const override{
-        return -K * T * exp(-r * T) * NormalDistributionCDF(-1 * d_two());
+        return -K * T * std::exp(-r * T) * NormalDistributionCDF(-1 * d_two()) / 100.0;
     }
 };
-
-// int main() {
-//     Call callOption(100, 100, 0.05, 0.2, 1);
-//     std::cout << "Call Price: " << callOption.price() << std::endl;
-
-//     Put putOption(100, 100, 0.05, 0.2, 1);
-//     std::cout << "Put Price: " << putOption.price() << std::endl;
-
-//     return 0;
-// }
