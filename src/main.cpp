@@ -1,5 +1,6 @@
 #include <iostream>
-#include "BlackScholes.hpp"
+#include "BlackScholes/Call.hpp"
+#include "BlackScholes/Put.hpp"
 
 using namespace std;
 
