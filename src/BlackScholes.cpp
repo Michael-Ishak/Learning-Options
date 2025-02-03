@@ -9,7 +9,7 @@ class NumericalOperations{
         static inline double NormalDistributionCDF(double x){
             return 0.5 * (1 + std::erf(x));
         }
-        static inline double NormalDistribtuionPDF(double x){
+        static inline double NormalDistributionPDF(double x){
             return (1/(std::sqrt(std::numbers::pi))) * std::exp(-(std::pow(x, 2))/2);
         }
 };
@@ -56,15 +56,15 @@ public:
     }
 
     [[nodiscard]] double gamma() const override{
-        return NormalDistribtuionPDF(d_one())/(s_0 * sigma * std::sqrt(T));
+        return NormalDistributionPDF(d_one())/(s_0 * sigma * std::sqrt(T));
     }
 
     [[nodiscard]] double theta() const override{
-        return -1 * (s_0 * NormalDistribtuionPDF(d_one()) * sigma) / (2* std::sqrt(T) - r * K * std::exp(-r * T) * NormalDistributionCDF(d_two()));
+        return -1 * (s_0 * NormalDistributionPDF(d_one()) * sigma) / (2* std::sqrt(T) - r * K * std::exp(-r * T) * NormalDistributionCDF(d_two()));
     }
 
     [[nodiscard]] double vega() const override{
-        return s_0 * NormalDistribtuionPDF(d_one()) * std::sqrt(T);
+        return s_0 * NormalDistributionPDF(d_one()) * std::sqrt(T);
     }
 
     [[nodiscard]] double rho() const override{
@@ -81,6 +81,25 @@ public:
 
     [[nodiscard]] double price() const override{
         return K * std::exp(-r * T) * NormalDistributionCDF(-d_two()) - s_0 * NormalDistributionCDF(-d_one());
+    }
+    [[nodiscard]] double delta() const override {
+        return NormalDistributionCDF(d_one() - 1);
+    }
+
+    [[nodiscard]] double gamma() const override{
+        return NormalDistributionPDF(d_one())/(s_0 * sigma * std::sqrt(T));
+    }
+
+    [[nodiscard]] double theta() const override{
+        return -1 * (s_0 * NormalDistributionPDF(d_one()) * sigma) / (2* std::sqrt(T) + r * K * std::exp(-r * T) * NormalDistributionCDF(-1 * d_two()));
+    }
+
+    [[nodiscard]] double vega() const override{
+        return s_0 * NormalDistributionPDF(d_one()) * std::sqrt(T);
+    }
+
+    [[nodiscard]] double rho() const override{
+        return -K * T * exp(-r * T) * NormalDistributionCDF(-1 * d_two());
     }
 };
 
